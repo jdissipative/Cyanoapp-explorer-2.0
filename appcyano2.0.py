@@ -127,7 +127,8 @@ ax3_lines = [plt.Line2D([0], [0], color="b", linestyle="dashed", lw=2, label="Ai
 ax1.legend(handles=ax1_lines + ax2_lines + ax3_lines, loc="upper right", title="Legend")
 ax1.grid(True)
 
-plt.show()
+st.pyplot(fig)
+
 fig, ax1 = plt.subplots(figsize=(10, 6))
 
 # First axis: Cyanobacteria concentration
@@ -157,4 +158,5 @@ ax3_lines = [plt.Line2D([0], [0], color="b", linestyle="dashed", lw=2, label="Ai
 ax1.legend(handles=ax1_lines + ax2_lines + ax3_lines, loc="upper right", title="Legend")
 ax1.grid(True)
 
-plt.show()
+st.pyplot(fig)
+
