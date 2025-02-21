@@ -1,4 +1,4 @@
-pip! install matplotlib
+pip install matplotlib
 
 import numpy as np
 import matplotlib.pylab as plt
