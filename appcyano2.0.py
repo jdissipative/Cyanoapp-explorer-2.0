@@ -84,7 +84,7 @@ def run_simulation(t, C0, P0, I0, UMBRAL, args):
     return C, P, L
 
 st.title("Dynamical System Model")
-left_col, right_col = st.columns([1, 2])  # Left 1x width, Right 2x width
+left_col, spacer, right_col = st.columns([1, 0.2, 2])
 with left_col:
     params = {param: st.slider(param, 0.0, 10.0, 3.0) for param in ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'Kc', 'Kt', 'z']}
     C0 = st.number_input("Initial Cyanobacteria (C0)", value=0.005, format="%.6f")
