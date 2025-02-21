@@ -5,7 +5,7 @@ from scipy.integrate import quad
 import pandas as pd
 import seaborn as sns
 import math
-import streamlit
+import streamlit as st
 
 def dC(t, C, P, L, a, b, c, d, e, f, g, h, i, Kc, Kt, z, switch):
     PLF = a * C * P - b * C - c * C * C / P
