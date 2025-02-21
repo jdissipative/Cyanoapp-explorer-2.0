@@ -84,79 +84,82 @@ def run_simulation(t, C0, P0, I0, UMBRAL, args):
     return C, P, L
 
 st.title("Dynamical System Model")
-
-params = {param: st.slider(param, 0.0, 10.0, 3.0) for param in ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'Kc', 'Kt', 'z']}
-C0 = st.number_input("Initial Cyanobacteria (C0)", value=0.005, format="%.6f")
-P0 = st.number_input("Initial Phosphorus (P0)", value=0.005, format="%.6f")
-UMBRAL = st.number_input("Umbral", value=0.5, format="%.6f")
-days = st.number_input("Days (P0)", value=100)
-I0 = np.random.uniform(20, 40, days)
-I0_time = np.linspace(0, days, len(I0))
-dx = 0.001
-t = np.arange(0,days+ dx, dx)
-args=set_params(**params)
+left_col, right_col = st.columns([1, 2])  # Left 1x width, Right 2x width
+with left_col:
+    params = {param: st.slider(param, 0.0, 10.0, 3.0) for param in ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'Kc', 'Kt', 'z']}
+    C0 = st.number_input("Initial Cyanobacteria (C0)", value=0.005, format="%.6f")
+    P0 = st.number_input("Initial Phosphorus (P0)", value=0.005, format="%.6f")
+    UMBRAL = st.number_input("Umbral", value=0.5, format="%.6f")
+    days = st.number_input("Days (P0)", value=100)
+    I0 = np.random.uniform(20, 40, days)
+    I0_time = np.linspace(0, days, len(I0))
+    dx = 0.001
+    t = np.arange(0,days+ dx, dx)
+    args=set_params(**params)
 
 C, P, L = run_simulation(t, C0, P0, I0, UMBRAL, args)
 
-fig, ax1 = plt.subplots(figsize=(10, 6))
-
-# First axis: Cyanobacteria concentration
-ax1.plot(t, C, color="g", label="Cyanobacteria (C)")
-ax1.set_xlabel("Time (d)", fontsize=12)
-ax1.set_ylabel("Cyanobacteria (g/L)", color="g", fontsize=12)
-ax1.tick_params(axis="y", labelcolor="g")
-
-# Second axis: Light reaching cyanobacteria
-ax2 = ax1.twinx()
-ax2.plot(t, P, color="r", label="Phosphorus (P)")
-ax2.set_ylabel("Phosphorus", color="r", fontsize=12)
-ax2.tick_params(axis="y", labelcolor="r")
-
-# Third axis: Light intensity in the air
-ax3 = ax1.twinx()
-ax3.spines["right"].set_position(("outward", 60))  # Offset third axis
-ax3.plot(I0_time, I0, color="b", linestyle="dashed", label="Light Intensity (I0)")
-ax3.set_ylabel("Air Light Intensity", color="b", fontsize=12)
-ax3.tick_params(axis="y", labelcolor="b")
-
-# Custom legend
-ax1_lines = [plt.Line2D([0], [0], color="g", lw=2, label="Cyanobacteria (C)")]
-ax2_lines = [plt.Line2D([0], [0], color="r", lw=2, label="Phosphorus (P)")]
-ax3_lines = [plt.Line2D([0], [0], color="b", linestyle="dashed", lw=2, label="Air Light (I0)")]
-
-ax1.legend(handles=ax1_lines + ax2_lines + ax3_lines, loc="upper right", title="Legend")
-ax1.grid(True)
-
-st.pyplot(fig)
-
-fig, ax1 = plt.subplots(figsize=(10, 6))
-
-# First axis: Cyanobacteria concentration
-ax1.plot(t, C, color="g", label="Cyanobacteria (C)")
-ax1.set_xlabel("Time (d)", fontsize=12)
-ax1.set_ylabel("Cyanobacteria (g/L)", color="g", fontsize=12)
-ax1.tick_params(axis="y", labelcolor="g")
-
-# Second axis: Light reaching cyanobacteria
-ax2 = ax1.twinx()
-ax2.plot(t, L, color="r", label="Light (L)")
-ax2.set_ylabel("Light reaching C", color="r", fontsize=12)
-ax2.tick_params(axis="y", labelcolor="r")
-
-# Third axis: Light intensity in the air
-ax3 = ax1.twinx()
-ax3.spines["right"].set_position(("outward", 60))  # Offset third axis
-ax3.plot(I0_time, I0, color="b", linestyle="dashed", label="Light Intensity (I0)")
-ax3.set_ylabel("Air Light Intensity", color="b", fontsize=12)
-ax3.tick_params(axis="y", labelcolor="b")
-
-# Custom legend
-ax1_lines = [plt.Line2D([0], [0], color="g", lw=2, label="Cyanobacteria (C)")]
-ax2_lines = [plt.Line2D([0], [0], color="r", lw=2, label="Light reaching C (L)")]
-ax3_lines = [plt.Line2D([0], [0], color="b", linestyle="dashed", lw=2, label="Air Light (I0)")]
-
-ax1.legend(handles=ax1_lines + ax2_lines + ax3_lines, loc="upper right", title="Legend")
-ax1.grid(True)
-
-st.pyplot(fig)
+with right_col:
+    st.subheader("Simulation Results")
+    fig, ax1 = plt.subplots(figsize=(10, 6))
+    
+    # First axis: Cyanobacteria concentration
+    ax1.plot(t, C, color="g", label="Cyanobacteria (C)")
+    ax1.set_xlabel("Time (d)", fontsize=12)
+    ax1.set_ylabel("Cyanobacteria (g/L)", color="g", fontsize=12)
+    ax1.tick_params(axis="y", labelcolor="g")
+    
+    # Second axis: Light reaching cyanobacteria
+    ax2 = ax1.twinx()
+    ax2.plot(t, P, color="r", label="Phosphorus (P)")
+    ax2.set_ylabel("Phosphorus", color="r", fontsize=12)
+    ax2.tick_params(axis="y", labelcolor="r")
+    
+    # Third axis: Light intensity in the air
+    ax3 = ax1.twinx()
+    ax3.spines["right"].set_position(("outward", 60))  # Offset third axis
+    ax3.plot(I0_time, I0, color="b", linestyle="dashed", label="Light Intensity (I0)")
+    ax3.set_ylabel("Air Light Intensity", color="b", fontsize=12)
+    ax3.tick_params(axis="y", labelcolor="b")
+    
+    # Custom legend
+    ax1_lines = [plt.Line2D([0], [0], color="g", lw=2, label="Cyanobacteria (C)")]
+    ax2_lines = [plt.Line2D([0], [0], color="r", lw=2, label="Phosphorus (P)")]
+    ax3_lines = [plt.Line2D([0], [0], color="b", linestyle="dashed", lw=2, label="Air Light (I0)")]
+    
+    ax1.legend(handles=ax1_lines + ax2_lines + ax3_lines, loc="upper right", title="Legend")
+    ax1.grid(True)
+    
+    st.pyplot(fig)
+    
+    fig, ax1 = plt.subplots(figsize=(10, 6))
+    
+    # First axis: Cyanobacteria concentration
+    ax1.plot(t, C, color="g", label="Cyanobacteria (C)")
+    ax1.set_xlabel("Time (d)", fontsize=12)
+    ax1.set_ylabel("Cyanobacteria (g/L)", color="g", fontsize=12)
+    ax1.tick_params(axis="y", labelcolor="g")
+    
+    # Second axis: Light reaching cyanobacteria
+    ax2 = ax1.twinx()
+    ax2.plot(t, L, color="r", label="Light (L)")
+    ax2.set_ylabel("Light reaching C", color="r", fontsize=12)
+    ax2.tick_params(axis="y", labelcolor="r")
+    
+    # Third axis: Light intensity in the air
+    ax3 = ax1.twinx()
+    ax3.spines["right"].set_position(("outward", 60))  # Offset third axis
+    ax3.plot(I0_time, I0, color="b", linestyle="dashed", label="Light Intensity (I0)")
+    ax3.set_ylabel("Air Light Intensity", color="b", fontsize=12)
+    ax3.tick_params(axis="y", labelcolor="b")
+    
+    # Custom legend
+    ax1_lines = [plt.Line2D([0], [0], color="g", lw=2, label="Cyanobacteria (C)")]
+    ax2_lines = [plt.Line2D([0], [0], color="r", lw=2, label="Light reaching C (L)")]
+    ax3_lines = [plt.Line2D([0], [0], color="b", linestyle="dashed", lw=2, label="Air Light (I0)")]
+    
+    ax1.legend(handles=ax1_lines + ax2_lines + ax3_lines, loc="upper right", title="Legend")
+    ax1.grid(True)
+    
+    st.pyplot(fig)
 
