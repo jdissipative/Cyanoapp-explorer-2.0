@@ -1,8 +1,10 @@
-import streamlit as st
 import numpy as np
-import matplotlib.pyplot as plt
-import math
+import matplotlib.pylab as plt
+from scipy.special import erf
 from scipy.integrate import quad
+import pandas as pd
+import seaborn as sns
+import math
 
 def dC(t, C, P, L, a, b, c, d, e, f, g, h, i, Kc, Kt, z, switch):
     PLF = a * C * P - b * C - c * C * C / P
