@@ -59,7 +59,7 @@ params = {param: st.slider(param, 0.0, 10.0, 3.0) for param in ['a', 'b', 'c', '
 C0 = st.number_input("Initial Cyanobacteria (C0)", value=0.005, format="%.6f")
 P0 = st.number_input("Initial Phosphorus (P0)", value=0.005, format="%.6f")
 UMBRAL = st.number_input("Umbral", value=0.5, format="%.6f")
-days = st.number_input("Days (P0)", value=0.005, format="%.6f")
+days = st.number_input("Days (P0)", value=100)
 I0 = np.random.uniform(20, 40, days)
 
 t, C, P, L = run_simulation(list(params.values()), C0, P0, I0, UMBRAL)
