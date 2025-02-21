@@ -1,3 +1,5 @@
+!pip install matplotlib
+
 import numpy as np
 import matplotlib.pylab as plt
 from scipy.special import erf
