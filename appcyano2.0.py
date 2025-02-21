@@ -1,7 +1,5 @@
-pip install matplotlib
-
 import numpy as np
-import matplotlib.pylab as plt
+import import matplotlib.pyplot as plt
 from scipy.special import erf
 from scipy.integrate import quad
 import pandas as pd
