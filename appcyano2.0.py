@@ -93,7 +93,7 @@ with left_col:
     days = st.number_input("Days (P0)", value=100)
     I0 = np.random.uniform(20, 40, days)
     I0_time = np.linspace(0, days, len(I0))
-    dx = 0.001
+    dx = 0.0005
     t = np.arange(0,days+ dx, dx)
     args=set_params(**params)
 
