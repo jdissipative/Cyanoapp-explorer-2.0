@@ -93,6 +93,7 @@ days = st.number_input("Days (P0)", value=100)
 I0 = np.random.uniform(20, 40, days)
 dx = 0.001
 t = np.arange(0,days+ dx, dx)
+args=set_params(**params)
 
 C, P, L = run_simulation(t, C0, P0, I0, UMBRAL, args)
 
