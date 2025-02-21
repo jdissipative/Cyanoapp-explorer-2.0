@@ -1,5 +1,5 @@
 import numpy as np
-import import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 from scipy.special import erf
 from scipy.integrate import quad
 import pandas as pd
