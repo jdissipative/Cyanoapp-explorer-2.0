@@ -12,10 +12,7 @@ def dC(t, C, P, L, a, b, c, d, e, f, g, h, i, Kc, Kt, z, switch):
     PLF=a*C*P-b*C-c*C*C/P
     #Light as limitant factor expression (LLF)
     LLF=g*C*L-h*C-i*C/L
-    if switch==0:
-        return (PLF)
-    elif switch==1:
-        return (LLF)
+    return switch*PLF+(1-switch)*LLF
 
 def dP(t, C, P, a, b, c, d, e, f):
     return (d-e*C*P-f*P)
@@ -54,13 +51,13 @@ def run_simulation(t, C0, P0, I0, UMBRAL, args):
             P[i]=1.1e-7
 
         if C[i]<=0 and P[i]>=1e-8:
-            C[i]=1e-7
-
-        if P[i]>=UMBRAL:
-            switch=1
-        else:
+            C[i]=1e-7        
+        if UMBRAL-P[i]<0:
             switch=0
-
+        else:
+            switch=(UMBRAL-P[i])/UMBRAL
+            
+            
         Ii=int((i*dx-dx)//1)
         L[i]=Lv(C[i],I0[Ii], *args[6:])
 
