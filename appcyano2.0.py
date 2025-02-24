@@ -81,6 +81,7 @@ def run_simulation(t, C0, P0, I0, UMBRAL, args):
     return C, P, L
 data=pd.read_csv('solar.csv', sep=';')
 GHI=data['GHI']
+GHI=GHI.to_numpy()
 st.title("Dynamical System Model")
 left_col, spacer, right_col = st.columns([1, 0.2, 2])
 with left_col:
@@ -92,7 +93,7 @@ with left_col:
     #I0 = np.random.uniform(20, 40, days)
     #x = np.arange(days)  # Create an array from 0 to days-1
     ##I0 = 10 * np.cos(x / (9 * np.pi)) + 30
-    I0=np.arange(GHI[0:days])
+    I0=GHI[0:days]
     st.subheader(len(I0))
     I0_time = np.linspace(0, days, len(I0))
     dx = 0.0005
