@@ -7,21 +7,21 @@ import seaborn as sns
 import math
 import streamlit as st
 
-def dC(t, C, P, L, a, b, c, d, e, f, g, h, Kc, Kt, z, switch):
+def dC(t, C, P, L, a, b, c, d, e, f, g, Kc, Kt, z, switch):
     #Phosphorus as limitant factor expression (PLF)
-    PLF=a*C*P-c*C*C/P
+    #PLF=a*C*P-c*C*C/P
     #Light as limitant factor expression (LLF)
-    LLF=g*C*L-h*C/L
-    return switch*PLF+(1-switch)*LLF-b*C
+    #LLF=g*C*L-h*C/L
+    return a*C*P*L-b*C-c*C*C/P-d*C/L
 
-def dP(t, C, P, a, b, c, d, e, f):
-    return (d-e*C*P-f*P)
+def dP(t, C, P, a, b, c, d, e, f, g):
+    return (e-f*C*P-g*P)
 
-def Lv( C, I0, g, h, Kc, Kt, z):
+def Lv( C, I0, Kc, Kt, z):
     I=I0*math.exp(-z*(C*Kc+Kt))
     return quad(lambda x: I, 0, z)[0] 
 
-def set_params( a, b, c, d, e, f, g, h, Kc, Kt, z):
+def set_params( a, b, c, d, e, f, g, Kc, Kt, z):
         a = a
         b = b
         c = c
@@ -29,11 +29,10 @@ def set_params( a, b, c, d, e, f, g, h, Kc, Kt, z):
         e = e
         f = f
         g = g
-        h = h
         Kc = Kc
         Kt = Kt
         z = z
-        return a, b, c, d, e, f, g, h, Kc, Kt, z
+        return a, b, c, d, e, f, g, Kc, Kt, z
 
 def run_simulation(t, C0, P0, I0, UMBRAL, args):
     C = np.zeros(len(t))
@@ -84,7 +83,7 @@ GHI=GHI.to_numpy()
 st.title("Dynamical System Model")
 left_col, spacer, right_col = st.columns([1, 0.2, 2])
 with left_col:
-    params = {param: st.slider(param, 0.00, 10.0, 0.5, 0.001, format="%.5f") for param in ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'Kc', 'Kt', 'z']}
+    params = {param: st.slider(param, 0.00, 10.0, 0.5, 0.001, format="%.5f") for param in ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'Kc', 'Kt', 'z']}
     C0 = st.number_input("Initial Cyanobacteria (C0)", value=0.005, format="%.6f")
     P0 = st.number_input("Initial Phosphorus (P0)", value=0.005, format="%.6f")
     UMBRAL = st.number_input("Umbral", value=0.5, format="%.6f")
