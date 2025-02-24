@@ -17,7 +17,7 @@ def dC(t, C, P, L, a, b, c, d, e, f, g, h, Kc, Kt, z, switch):
 def dP(t, C, P, a, b, c, d, e, f):
     return (d-e*C*P-f*P)
 
-def Lv( C, I0, g, h, i, Kc, Kt, z):
+def Lv( C, I0, g, h, Kc, Kt, z):
     I=I0*math.exp(-z*(C*Kc+Kt))
     return quad(lambda x: I, 0, z)[0] 
 
