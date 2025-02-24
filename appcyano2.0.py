@@ -60,7 +60,7 @@ def run_simulation(t, C0, P0, I0, UMBRAL, args):
         L[i]=Lv(C[i],I0[Ii], *args[7:])
 
         k11=dC(t[i],C[i], P[i], L[i], *args, switch)
-        k21=dP(t[i],C[i], P[i],*args[0:6])
+        k21=dP(t[i],C[i], P[i],*args[0:7])
 
         k12=dC(t[i]+0.5*dx,C[i]+0.5*k11*dx, P[i]+0.5*k21*dx, L[i], *args, switch)
         k22=dP(t[i]+0.5*dx,C[i]+0.5*k11*dx, P[i]+0.5*k21*dx,*args[0:7])
