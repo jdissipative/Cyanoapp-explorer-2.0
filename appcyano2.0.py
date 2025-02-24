@@ -93,7 +93,7 @@ with left_col:
     #x = np.arange(days)  # Create an array from 0 to days-1
     ##I0 = 10 * np.cos(x / (9 * np.pi)) + 30
     I0=GHI[0:days-1]
-    len(I0)
+    print(len(I0))
     I0_time = np.linspace(0, days, len(I0))
     dx = 0.0005
     t = np.arange(0,days+ dx, dx)
