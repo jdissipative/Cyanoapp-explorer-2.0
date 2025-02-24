@@ -40,7 +40,7 @@ def run_simulation(t, C0, P0, I0, UMBRAL, args):
     L = np.zeros(len(t))
     C[0] = C0
     P[0] = P0
-    L[0] = Lv(C0,I0[0], *args[6:] )
+    L[0] = Lv(C0,I0[0], *args[7:] )
 
     for i in range(0,len(t)-1):
 
@@ -57,24 +57,24 @@ def run_simulation(t, C0, P0, I0, UMBRAL, args):
             
             
         Ii=int((i*dx-dx)//1)
-        L[i]=Lv(C[i],I0[Ii], *args[6:])
+        L[i]=Lv(C[i],I0[Ii], *args[7:])
 
         k11=dC(t[i],C[i], P[i], L[i], *args, switch)
         k21=dP(t[i],C[i], P[i],*args[0:6])
 
         k12=dC(t[i]+0.5*dx,C[i]+0.5*k11*dx, P[i]+0.5*k21*dx, L[i], *args, switch)
-        k22=dP(t[i]+0.5*dx,C[i]+0.5*k11*dx, P[i]+0.5*k21*dx,*args[0:6])
+        k22=dP(t[i]+0.5*dx,C[i]+0.5*k11*dx, P[i]+0.5*k21*dx,*args[0:7])
 
         k13=dC(t[i]+0.5*dx, C[i]+0.5*k12*dx, P[i]+0.5*k22*dx, L[i], *args, switch)
-        k23=dP(t[i]+0.5*dx, C[i]+0.5*k12*dx, P[i]+0.5*k22*dx,*args[0:6])
+        k23=dP(t[i]+0.5*dx, C[i]+0.5*k12*dx, P[i]+0.5*k22*dx,*args[0:7])
 
         k14=dC(t[i]+dx, C[i]+k13*dx, P[i]+k23*dx, L[i], *args, switch)
-        k24=dP(t[i]+dx, C[i]+k13*dx, P[i]+k23*dx,*args[0:6])
+        k24=dP(t[i]+dx, C[i]+k13*dx, P[i]+k23*dx,*args[0:7])
 
         C[i + 1]=C[i]+(1/6)*(k11+2*k12+2*k13+k14)*dx
         P[i + 1]=P[i]+(1/6)*(k21+2*k22+2*k23+k24)*dx
 
-    L[len(t)-1]=Lv(C[len(t)-1],I0[Ii],*args[6:], )
+    L[len(t)-1]=Lv(C[len(t)-1],I0[Ii],*args[7:], )
 
     return C, P, L
 data=pd.read_csv('solar.csv', sep=';')
