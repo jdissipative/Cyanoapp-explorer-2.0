@@ -78,7 +78,7 @@ def run_simulation(t, C0, P0, I0, UMBRAL, args):
 
     return C, P, L
 data=pd.read_csv('solar.csv', sep=';')
-GHI=data['GHI']
+GHI=data['BNI']
 GHI=GHI.to_numpy()
 GHI=GHI/1000
 st.title("Dynamical System Model")
