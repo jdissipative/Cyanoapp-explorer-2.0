@@ -20,7 +20,7 @@ def dP(t, C, P, a, b, c, d, e, f, g):
 def Lv( C, I0, Kc, Kt, z):
     I=I0*math.exp(-z*(C*Kc+Kt))
     return quad(lambda x: I, 0, z)[0] 
-
+ 
 def set_params( a, b, c, d, e, f, g, Kc, Kt, z):
         a = a
         b = b
@@ -80,6 +80,7 @@ def run_simulation(t, C0, P0, I0, UMBRAL, args):
 data=pd.read_csv('solar.csv', sep=';')
 GHI=data['GHI']
 GHI=GHI.to_numpy()
+GHI=GHI/1000
 st.title("Dynamical System Model")
 left_col, spacer, right_col = st.columns([1, 0.2, 2])
 with left_col:
