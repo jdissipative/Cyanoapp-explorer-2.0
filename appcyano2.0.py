@@ -44,12 +44,12 @@ def run_simulation(t, C0, P0, I0, UMBRAL, args):
 
     for i in range(0,len(t)-1):
 
-        if P[i]<=1e-8:
-            C[i]=0
-            P[i]=1.1e-7
+        if P[i-1]<=1e-8:
+            #C[i]=0
+            P[i-1]=1.1e-7
 
-        if C[i]<=0 and P[i]>=1e-8:
-            C[i]=1e-7        
+        if C[i-1]<=0 and P[i-1]>=1e-8:
+            C[i-1]=1e-7        
         if UMBRAL-P[i]<0:
             switch=0
         else:
