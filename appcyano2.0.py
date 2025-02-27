@@ -7,15 +7,16 @@ import seaborn as sns
 import math
 import streamlit as st
 
+#Modelo conjunto
 def dC(t, C, P, L, a, b, c, d, e, f, g, Kc, Kt, z, switch):
     #Phosphorus as limitant factor expression (PLF)
-    #PLF=a*C*P-c*C*C/P
+    PLF=a*C*P-c*C*C/P
     #Light as limitant factor expression (LLF)
-    #LLF=g*C*L-h*C/L
-    return a*C*P*L-b*C-c*C*C/P-d*C/L
+    LLF=g*C*L
+    return switch*PLF+(1-switch)*LLF-b*C
 
-def dP(t, C, P, a, b, c, d, e, f, g):
-    return (e-f*C*P-g*P)
+def dP(t, C, P, a, b, c, d, e, f):
+    return (d-e*C*P-f*P)
 
 def Lv( C, I0, Kc, Kt, z):
     I=I0*math.exp(-z*(C*Kc+Kt))
@@ -44,12 +45,12 @@ def run_simulation(t, C0, P0, I0, UMBRAL, args):
 
     for i in range(0,len(t)-1):
 
-        if P[i-1]<=1e-8:
+        if P[i]<=1e-8:
             #C[i]=0
-            P[i-1]=1.1e-7
+            P[i]=1.1e-7
 
-        if C[i-1]<=0 and P[i-1]>=1e-8:
-            C[i-1]=1e-7        
+        if C[i]<=0 and P[i]>=1e-8:
+            C[i]=1e-7        
         if UMBRAL-P[i]<0:
             switch=0
         else:
@@ -60,16 +61,16 @@ def run_simulation(t, C0, P0, I0, UMBRAL, args):
         L[i]=Lv(C[i],I0[Ii], *args[7:])
 
         k11=dC(t[i],C[i], P[i], L[i], *args, switch)
-        k21=dP(t[i],C[i], P[i],*args[0:7])
+        k21=dP(t[i],C[i], P[i],*args[0:6])
 
         k12=dC(t[i]+0.5*dx,C[i]+0.5*k11*dx, P[i]+0.5*k21*dx, L[i], *args, switch)
-        k22=dP(t[i]+0.5*dx,C[i]+0.5*k11*dx, P[i]+0.5*k21*dx,*args[0:7])
+        k22=dP(t[i]+0.5*dx,C[i]+0.5*k11*dx, P[i]+0.5*k21*dx,*args[0:6])
 
         k13=dC(t[i]+0.5*dx, C[i]+0.5*k12*dx, P[i]+0.5*k22*dx, L[i], *args, switch)
-        k23=dP(t[i]+0.5*dx, C[i]+0.5*k12*dx, P[i]+0.5*k22*dx,*args[0:7])
+        k23=dP(t[i]+0.5*dx, C[i]+0.5*k12*dx, P[i]+0.5*k22*dx,*args[0:6])
 
         k14=dC(t[i]+dx, C[i]+k13*dx, P[i]+k23*dx, L[i], *args, switch)
-        k24=dP(t[i]+dx, C[i]+k13*dx, P[i]+k23*dx,*args[0:7])
+        k24=dP(t[i]+dx, C[i]+k13*dx, P[i]+k23*dx,*args[0:6])
 
         C[i + 1]=C[i]+(1/6)*(k11+2*k12+2*k13+k14)*dx
         P[i + 1]=P[i]+(1/6)*(k21+2*k22+2*k23+k24)*dx
