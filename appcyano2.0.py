@@ -83,7 +83,7 @@ GHI=data['BNI']
 GHI=GHI.to_numpy()
 GHI=GHI/1000
 st.title("Dynamical System Model")
-st.latex(r"\frac{dC}{dt}=\alpha[aCP-h\frac{cC{^2}}{P}]-bC+\beta[gCL]")
+st.latex(r"\frac{dC}{dt}=\alpha[aCP-c\frac{C{^2}}{P}]-bC+\beta[gCL]")
 st.latex(r"\frac{dP}{dt}=d-eCP-fP")
 left_col, spacer, right_col = st.columns([1, 0.2, 2])
 with left_col:
