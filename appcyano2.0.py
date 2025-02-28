@@ -87,7 +87,7 @@ st.latex(r"\frac{dC}{dt}=\alpha[aCP-c\frac{C{^2}}{P}]-bC+\beta[gCL]")
 st.latex(r"\frac{dP}{dt}=d-eCP-fP")
 left_col, spacer, right_col = st.columns([1, 0.2, 2])
 with left_col:
-    params = {param: st.slider(param, 0.00, 100.0, 0.5, 0.001, format="%.5f") for param in ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'Kc', 'Kt', 'z']}
+    params = {param: st.slider(param, 0.00, 20.0, 0.5, 0.001, format="%.5f") for param in ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'Kc', 'Kt', 'z']}
     C0 = st.number_input("Initial Cyanobacteria (C0)", value=0.005, format="%.6f")
     P0 = st.number_input("Initial Phosphorus (P0)", value=0.005, format="%.6f")
     UMBRAL = st.number_input("Umbral", value=0.5, format="%.6f")
