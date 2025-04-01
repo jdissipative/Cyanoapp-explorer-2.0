@@ -83,7 +83,7 @@ P0 = st.number_input("Initial Phosphorus (P0)", value=0.005, format="%.6f")
 days = st.number_input("Days", value=100)
 dx = 0.001
 t = np.arange(0, days + dx, dx)
-args = set_params(**params, q=q)
+args = set_params(**params)
 
 C, P, L = run_simulation(t, C0, P0, I0, args)
 
