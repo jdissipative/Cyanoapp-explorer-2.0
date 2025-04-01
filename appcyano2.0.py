@@ -73,11 +73,11 @@ st.latex(r"\frac{dC}{dt}=\alpha[aCP-b\frac{C{^2}}{P}]-dC+\beta[cCL]")
 st.latex(r"\frac{dP}{dt}=e-fCP-gP")
 
 params = {param: st.slider(param, 0.00, 20.0, 0.5, 0.001, format="%.5f") for param in ['a', 'b', 'c', 'd', 'e', 'f', 'g']}
-q = st.slider("q", 0.00, 5.0, 0.1, 0.001, format="%.5f")
+q = st.slider("q", 0.00, 100, 0.1, 0.001, format="%.5f")
 I0 = st.slider("Initial Light Intensity (I0)", 0.00, 300.0, 800.0, 0.01, format="%.2f")
 Kc = st.number_input("Initial Cyanobacteria (C0)", value=0.0003, format="%.6f")
 Kt = st.number_input("Initial Cyanobacteria (C0)", value=0.9, format="%.6f")
-z = st.number_input("Initial Cyanobacteria (C0)", value=2, format="%.6f")
+z = st.number_input("Initial Cyanobacteria (C0)", value=2.0, format="%.6f")
 C0 = st.number_input("Initial Cyanobacteria (C0)", value=0.005, format="%.6f")
 P0 = st.number_input("Initial Phosphorus (P0)", value=0.005, format="%.6f")
 days = st.number_input("Days", value=100)
