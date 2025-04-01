@@ -61,7 +61,7 @@ def run_simulation(t, C0, P0, I0, args):
         k14 = dC(t[i] + dx, C[i] + k13 * dx, P[i] + k23 * dx, L[i], *args, switch)
         k24 = dP(t[i] + dx, C[i] + k13 * dx, P[i] + k23 * dx, *args[:7])
 
-        C[i + 1] = C[i] + (1 / 6) * (k11 + 2 * k12 + 2 * k13 + k14) * dx
+        C[i + 1] = C[i] + (1 / 6) * (k11 + 2 * k12 + 2 *k13 + k14) * dx
         P[i + 1] = P[i] + (1 / 6) * (k21 + 2 * k22 + 2 * k23 + k24) * dx
 
     L[-1] = Lv(C[-1], I0, *args[7:10])
@@ -89,9 +89,10 @@ fig, ax = plt.subplots(figsize=(10, 6))
 ax.plot(t, C, color="g", label="Cyanobacteria (C)")
 ax.plot(t, P, color="r", label="Phosphorus (P)")
 ax.plot(t, L, color="b", linestyle="dashed", label="Light reaching C (L)")
-ax.set_xlabel("Time (d)")
-ax.set_ylabel("Concentration / Light")
+ax.set_xlabel("Time (days)")
+ax.set_ylabel("Concentration / Light Intensity")
 ax.legend()
 ax.grid(True)
 st.pyplot(fig)
+
 
