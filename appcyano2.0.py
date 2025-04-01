@@ -78,7 +78,7 @@ I0 = st.slider("Initial Light Intensity (I0)", 0.00, 50.0, 10.0, 0.01, format="%
 C0 = st.number_input("Initial Cyanobacteria (C0)", value=0.005, format="%.6f")
 P0 = st.number_input("Initial Phosphorus (P0)", value=0.005, format="%.6f")
 days = st.number_input("Days", value=100)
-dx = 0.0005
+dx = 0.001
 t = np.arange(0, days + dx, dx)
 args = set_params(**params, q=q)
 
