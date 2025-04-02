@@ -39,6 +39,7 @@ def run_simulation(t, C0, P0, I0, args):
     P[0] = P0
     L[0] = Lv(C0, I0, *args[7:10])
 
+    dx = t[1] - t[0]
     for i in range(len(t) - 1):
         if P[i] <= 1e-8:
             P[i] = 1.1e-7
@@ -72,16 +73,13 @@ st.title("Dynamical System Model")
 st.latex(r"\frac{dC}{dt}=\alpha[aCP-b\frac{C{^2}}{P}]-dC+\beta[cCL]")
 st.latex(r"\frac{dP}{dt}=e-fCP-gP")
 
-params = {param: st.slider(param, 0.00, 20.0, 0.5, 0.001, format="%.5f") for param in ['a', 'b', 'c', 'd', 'e', 'f', 'g']}
+params = {param: st.slider(param, 0.00, 20.0, 0.5, 0.001, format="%.5f") for param in ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'Kc', 'Kt', 'z']}
 q = st.slider("q", 0.00, 5.0, 0.1, 0.001, format="%.5f")
-I0 = st.slider("Initial Light Intensity (I0)", 0.00, 300.0, 800.0, 0.01, format="%.2f")
-Kc = st.number_input("Initial Cyanobacteria (C0)", value=0.0003, format="%.6f")
-Kt = st.number_input("Initial Cyanobacteria (C0)", value=0.9, format="%.6f")
-z = st.number_input("Initial Cyanobacteria (C0)", value=2.0, format="%.6f")
+I0 = st.slider("Initial Light Intensity (I0)", 0.00, 50.0, 10.0, 0.01, format="%.2f")
 C0 = st.number_input("Initial Cyanobacteria (C0)", value=0.005, format="%.6f")
 P0 = st.number_input("Initial Phosphorus (P0)", value=0.005, format="%.6f")
 days = st.number_input("Days", value=100)
-dx = 0.001
+dx = 0.0005
 t = np.arange(0, days + dx, dx)
 args = set_params(**params, q=q)
 
@@ -97,5 +95,3 @@ ax.set_ylabel("Concentration / Light Intensity")
 ax.legend()
 ax.grid(True)
 st.pyplot(fig)
-
-
