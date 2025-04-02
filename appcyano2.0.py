@@ -105,7 +105,7 @@ def main():
     t = np.arange(0, days + dx, dx)
     args = set_params(**params, Kc=Kc, Kt=Kt, z=z, q=q)
     
- if st.button("Run Simulation"):
+    if st.button("Run Simulation"):
         C, P, L, alpha_vals, beta_vals = run_simulation(t, C0, P0, I0, args)
         
         st.subheader("Simulation Results")
@@ -162,5 +162,6 @@ def main():
             'Beta (switch)': beta_vals[::sample_rate]
         })
         st.dataframe(df.style.format("{:.4f}"), height=300)
+
 if __name__ == "__main__":
     main()
