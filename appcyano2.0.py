@@ -110,58 +110,46 @@ def main():
         
         st.subheader("Simulation Results")
         
-        # Create two columns for the plots
-        col1, col2 = st.columns(2)
+
+        # First plot: C, P, L
+        fig1, ax1 = plt.subplots(figsize=(10, 6))
+        ax2 = ax1.twinx()
+        ax3 = ax1.twinx()
         
-        with col1:
-            # First plot: C, P, L
-            fig1, ax1 = plt.subplots(figsize=(10, 6))
-            ax2 = ax1.twinx()
-            ax3 = ax1.twinx()
-            
-            ax3.spines.right.set_position(("outward", 60))
-            
-            ax1.plot(t, C, color="g", label="Cyanobacteria (C)")
-            ax2.plot(t, P, color="r", label="Phosphorus (P)")
-            ax3.plot(t, L, color="b", linestyle="dashed", label="Light (L)")
-            
-            ax1.set_xlabel("Time (days)")
-            ax1.set_ylabel("Cyanobacteria", color="g")
-            ax2.set_ylabel("Phosphorus", color="r")
-            ax3.set_ylabel("Light Intensity", color="b")
-            
-            ax1.legend(loc="upper left")
-            ax2.legend(loc="upper right")
-            ax3.legend(loc="center right")
-            ax1.grid(True)
-            ax1.set_title("Cyanobacteria, Phosphorus and Light Dynamics")
-            st.pyplot(fig1)
+        ax3.spines.right.set_position(("outward", 60))
         
-        with col2:
-            # Second plot: Alpha and Beta
-            fig2, ax = plt.subplots(figsize=(10, 6))
-            
-            ax.plot(t, alpha_vals, color="purple", label="Alpha (1-switch)")
-            ax.plot(t, beta_vals, color="orange", label="Beta (switch)")
-            
-            ax.set_xlabel("Time (days)")
-            ax.set_ylabel("Value")
-            ax.legend(loc="upper right")
-            ax.grid(True)
-            ax.set_title("Alpha and Beta Dynamics")
-            ax.set_ylim(-0.1, 1.1)  # Since alpha/beta are between 0 and 1
-            
-            st.pyplot(fig2)
+        ax1.plot(t, C, color="g", label="Cyanobacteria (C)")
+        ax2.plot(t, P, color="r", label="Phosphorus (P)")
+        ax3.plot(t, L, color="b", linestyle="dashed", label="Light (L)")
         
-        # Show alpha and beta values in a downsampled dataframe
-        st.subheader("Switch Values Over Time (Sampled)")
-        sample_rate = max(1, len(t) // 1000)  # Show about 1000 points max
-        df = pd.DataFrame({
-            'Time': t[::sample_rate],
-            'Alpha (1-switch)': alpha_vals[::sample_rate],
-            'Beta (switch)': beta_vals[::sample_rate]
-        })
-        st.dataframe(df.style.format("{:.4f}"), height=300)
+        ax1.set_xlabel("Time (days)")
+        ax1.set_ylabel("Cyanobacteria", color="g")
+        ax2.set_ylabel("Phosphorus", color="r")
+        ax3.set_ylabel("Light Intensity", color="b")
+        
+        ax1.legend(loc="upper left")
+        ax2.legend(loc="upper right")
+        ax3.legend(loc="center right")
+        ax1.grid(True)
+        ax1.set_title("Cyanobacteria, Phosphorus and Light Dynamics")
+        st.pyplot(fig1)
+    
+   
+        # Second plot: Alpha and Beta
+        fig2, ax = plt.subplots(figsize=(10, 6))
+        
+        ax.plot(t, alpha_vals, color="purple", label="Alpha (1-switch)")
+        ax.plot(t, beta_vals, color="orange", label="Beta (switch)")
+        
+        ax.set_xlabel("Time (days)")
+        ax.set_ylabel("Value")
+        ax.legend(loc="upper right")
+        ax.grid(True)
+        ax.set_title("Alpha and Beta Dynamics")
+        ax.set_ylim(-0.1, 1.1)  # Since alpha/beta are between 0 and 1
+        
+        st.pyplot(fig2)
+        
 
 if __name__ == "__main__":
     main()
