@@ -7,6 +7,9 @@ import seaborn as sns
 import math
 import streamlit as st
 
+# Increase the maximum number of elements that can be rendered
+pd.set_option("styler.render.max_elements", 1000000)
+
 # Modelo conjunto
 def dC(t, C, P, L, a, b, c, d, e, f, g, Kc, Kt, z, q, switch):
     PLF = a * C * P - b * C * C / P
@@ -32,8 +35,8 @@ def run_simulation(t, C0, P0, I0, args):
     C = np.zeros(len(t))
     P = np.zeros(len(t))
     L = np.zeros(len(t))
-    alpha_vals = np.zeros(len(t))  # Track alpha values
-    beta_vals = np.zeros(len(t))   # Track beta values
+    alpha_vals = np.zeros(len(t))
+    beta_vals = np.zeros(len(t))
     C[0] = C0
     P[0] = P0
     L[0] = Lv(C0, I0, *args[7:10])
@@ -45,8 +48,8 @@ def run_simulation(t, C0, P0, I0, args):
         if C[i] <= 0 and P[i] >= 1e-8:
             C[i] = 1e-7
         switch = saturation(P[i], C[i], args[10])
-        alpha_vals[i] = 1 - switch  # Store alpha
-        beta_vals[i] = switch       # Store beta
+        alpha_vals[i] = 1 - switch
+        beta_vals[i] = switch
         L[i] = Lv(C[i], I0, *args[7:10])
         
         k11 = dC(t[i], C[i], P[i], L[i], *args, switch)
@@ -62,13 +65,11 @@ def run_simulation(t, C0, P0, I0, args):
         P[i + 1] = P[i] + (1 / 6) * (k21 + 2 * k22 + 2 * k23 + k24) * dx
 
     L[-1] = Lv(C[-1], I0, *args[7:10])
-    # Store final alpha and beta values
     switch = saturation(P[-1], C[-1], args[10])
     alpha_vals[-1] = 1 - switch
     beta_vals[-1] = switch
     return C, P, L, alpha_vals, beta_vals
 
-# Streamlit app
 def main():
     st.title("Dynamical System Model")
     st.latex(r"\frac{dC}{dt}=\alpha[aCP-b\frac{C{^2}}{P}]-dC+\beta[cCL]")
@@ -142,12 +143,13 @@ def main():
         ax1.grid(True)
         st.pyplot(fig)
         
-        # Show alpha and beta values in a dataframe
-        st.subheader("Switch Values Over Time")
+        # Show alpha and beta values in a downsampled dataframe
+        st.subheader("Switch Values Over Time (Sampled)")
+        sample_rate = max(1, len(t) // 1000)  # Show about 1000 points max
         df = pd.DataFrame({
-            'Time': t,
-            'Alpha (1-switch)': alpha_vals,
-            'Beta (switch)': beta_vals
+            'Time': t[::sample_rate],
+            'Alpha (1-switch)': alpha_vals[::sample_rate],
+            'Beta (switch)': beta_vals[::sample_rate]
         })
         st.dataframe(df.style.format("{:.4f}"), height=300)
 
