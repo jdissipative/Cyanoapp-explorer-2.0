@@ -1,37 +1,10 @@
-import numpy as np
-import matplotlib.pyplot as plt
-from scipy.special import erf
-from scipy.integrate import quad
-import pandas as pd
-import seaborn as sns
-import math
-import streamlit as st
-
-# Modelo conjunto
-def dC(t, C, P, L, a, b, c, d, e, f, g, Kc, Kt, z, q, switch):
-    PLF = a * C * P - b * C * C / P
-    LLF = c * C * L
-    alpha = 1 - switch
-    beta = switch
-    return alpha * PLF + beta * LLF - d * C
-
-def dP(t, C, P, a, b, c, d, e, f, g):
-    return e - f * C * P - g * P
-
-def Lv(C, I0, Kc, Kt, z):
-    I = I0 * math.exp(-z * (C * Kc + Kt))
-    return quad(lambda x: I, 0, z)[0]
-
-def saturation(P, C, q):
-    return P / (P + q * C)
-
-def set_params(a, b, c, d, e, f, g, Kc, Kt, z, q):
-    return a, b, c, d, e, f, g, Kc, Kt, z, q
-
+# Modified run_simulation function to track alpha and beta
 def run_simulation(t, C0, P0, I0, args):
     C = np.zeros(len(t))
     P = np.zeros(len(t))
     L = np.zeros(len(t))
+    alpha_vals = np.zeros(len(t))  # New array for alpha values
+    beta_vals = np.zeros(len(t))   # New array for beta values
     C[0] = C0
     P[0] = P0
     L[0] = Lv(C0, I0, *args[7:10])
@@ -43,6 +16,8 @@ def run_simulation(t, C0, P0, I0, args):
         if C[i] <= 0 and P[i] >= 1e-8:
             C[i] = 1e-7
         switch = saturation(P[i], C[i], args[10])
+        alpha_vals[i] = 1 - switch  # Store alpha
+        beta_vals[i] = switch       # Store beta
         L[i] = Lv(C[i], I0, *args[7:10])
         
         k11 = dC(t[i], C[i], P[i], L[i], *args, switch)
@@ -58,45 +33,40 @@ def run_simulation(t, C0, P0, I0, args):
         P[i + 1] = P[i] + (1 / 6) * (k21 + 2 * k22 + 2 * k23 + k24) * dx
 
     L[-1] = Lv(C[-1], I0, *args[7:10])
-    return C, P, L
+    # Store final alpha and beta values
+    switch = saturation(P[-1], C[-1], args[10])
+    alpha_vals[-1] = 1 - switch
+    beta_vals[-1] = switch
+    return C, P, L, alpha_vals, beta_vals
 
-st.title("Dynamical System Model")
-st.latex(r"\frac{dC}{dt}=\alpha[aCP-b\frac{C{^2}}{P}]-dC+\beta[cCL]")
-st.latex(r"\frac{dP}{dt}=e-fCP-gP")
+# Update the simulation call
+C, P, L, alpha_vals, beta_vals = run_simulation(t, C0, P0, I0, args)
 
-params = {param: st.slider(param, 0.00, 20.0, 0.5, 0.001, format="%.5f") for param in ['a', 'b', 'c', 'd', 'e', 'f', 'g']}
-Kc = st.number_input("Kc", value=0.0003, format="%.6f")
-Kt = st.number_input("Kt", value=0.9, format="%.6f")
-z = st.number_input("z", value=2.0, format="%.6f")
-q = st.slider("q", 0.00, 100.0, 0.1, 0.001, format="%.5f")
-I0 = st.slider("Initial Light Intensity (I0)", 0.00, 800.0, 10.0, 1.0, format="%.2f")
-C0 = st.number_input("Initial Cyanobacteria (C0)", value=0.005, format="%.6f")
-P0 = st.number_input("Initial Phosphorus (P0)", value=0.005, format="%.6f")
-days = st.number_input("Days", value=100)
-dx = 0.0005
-t = np.arange(0, days + dx, dx)
-args = set_params(**params, Kc=Kc, Kt=Kt, z=z, q=q)
-
-C, P, L = run_simulation(t, C0, P0, I0, args)
-
+# Update the plotting code
 st.subheader("Simulation Results")
 fig, ax1 = plt.subplots(figsize=(10, 6))
 ax2 = ax1.twinx()
 ax3 = ax1.twinx()
 ax3.spines.right.set_position(("outward", 60))
+ax4 = ax1.twinx()
+ax4.spines.right.set_position(("outward", 120))
 
 ax1.plot(t, C, color="g", label="Cyanobacteria (C)")
 ax2.plot(t, P, color="r", label="Phosphorus (P)")
 ax3.plot(t, L, color="b", linestyle="dashed", label="Light reaching C (L)")
+ax4.plot(t, alpha_vals, color="purple", linestyle=":", label="Alpha (1-switch)")
+ax4.plot(t, beta_vals, color="orange", linestyle=":", label="Beta (switch)")
 
 ax1.set_xlabel("Time (days)")
 ax1.set_ylabel("Cyanobacteria Concentration", color="g")
 ax2.set_ylabel("Phosphorus Concentration", color="r")
 ax3.set_ylabel("Light Intensity", color="b")
+ax4.set_ylabel("Alpha/Beta Values", color="purple")
 
 ax1.legend(loc="upper left")
 ax2.legend(loc="upper right")
-ax3.legend(loc="lower right")
+ax3.legend(loc="center right")
+ax4.legend(loc="lower right")
 ax1.grid(True)
 
 st.pyplot(fig)
