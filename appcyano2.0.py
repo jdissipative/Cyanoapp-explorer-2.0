@@ -9,13 +9,10 @@ import streamlit as st
 
 # Modelo conjunto
 def dC(t, C, P, L, a, b, c, d, e, f, g, Kc, Kt, z, q, switch):
-    # Phosphorus as limitant factor expression (PLF)
     PLF = a * C * P - b * C * C / P
-    # Light as limitant factor expression (LLF)
     LLF = c * C * L
     alpha = 1 - switch
     beta = switch
-    # Model
     return alpha * PLF + beta * LLF - d * C
 
 def dP(t, C, P, a, b, c, d, e, f, g):
@@ -43,22 +40,17 @@ def run_simulation(t, C0, P0, I0, args):
     for i in range(len(t) - 1):
         if P[i] <= 1e-8:
             P[i] = 1.1e-7
-
         if C[i] <= 0 and P[i] >= 1e-8:
             C[i] = 1e-7
-
         switch = saturation(P[i], C[i], args[10])
         L[i] = Lv(C[i], I0, *args[7:10])
-
+        
         k11 = dC(t[i], C[i], P[i], L[i], *args, switch)
         k21 = dP(t[i], C[i], P[i], *args[:7])
-
         k12 = dC(t[i] + 0.5 * dx, C[i] + 0.5 * k11 * dx, P[i] + 0.5 * k21 * dx, L[i], *args, switch)
         k22 = dP(t[i] + 0.5 * dx, C[i] + 0.5 * k11 * dx, P[i] + 0.5 * k21 * dx, *args[:7])
-
         k13 = dC(t[i] + 0.5 * dx, C[i] + 0.5 * k12 * dx, P[i] + 0.5 * k22 * dx, L[i], *args, switch)
         k23 = dP(t[i] + 0.5 * dx, C[i] + 0.5 * k12 * dx, P[i] + 0.5 * k22 * dx, *args[:7])
-
         k14 = dC(t[i] + dx, C[i] + k13 * dx, P[i] + k23 * dx, L[i], *args, switch)
         k24 = dP(t[i] + dx, C[i] + k13 * dx, P[i] + k23 * dx, *args[:7])
 
@@ -66,7 +58,6 @@ def run_simulation(t, C0, P0, I0, args):
         P[i + 1] = P[i] + (1 / 6) * (k21 + 2 * k22 + 2 * k23 + k24) * dx
 
     L[-1] = Lv(C[-1], I0, *args[7:10])
-
     return C, P, L
 
 st.title("Dynamical System Model")
@@ -89,13 +80,16 @@ args = set_params(**params, Kc=Kc, Kt=Kt, z=z, q=q)
 C, P, L = run_simulation(t, C0, P0, I0, args)
 
 st.subheader("Simulation Results")
-fig, ax = plt.subplots(figsize=(10, 6))
-ax.plot(t, C, color="g", label="Cyanobacteria (C)")
-ax.plot(t, P, color="r", label="Phosphorus (P)")
-ax.plot(t, L, color="b", linestyle="dashed", label="Light reaching C (L)")
-ax.set_xlabel("Time (days)")
-ax.set_ylabel("Concentration / Light Intensity")
-ax.legend()
-ax.grid(True)
+fig, ax1 = plt.subplots(figsize=(10, 6))
+ax2 = ax1.twinx()
+ax1.plot(t, C, color="g", label="Cyanobacteria (C)")
+ax1.plot(t, P, color="r", label="Phosphorus (P)")
+ax2.plot(t, L, color="b", linestyle="dashed", label="Light reaching C (L)")
+ax1.set_xlabel("Time (days)")
+ax1.set_ylabel("Concentration")
+ax2.set_ylabel("Light Intensity")
+ax1.legend(loc="upper left")
+ax2.legend(loc="upper right")
+ax1.grid(True)
 st.pyplot(fig)
 
