@@ -101,7 +101,7 @@ def main():
     days = st.number_input("Simulation Days", value=100)
     
     # Run simulation
-    dx = 0.0005
+    dx = 0.001
     t = np.arange(0, days + dx, dx)
     args = set_params(**params, Kc=Kc, Kt=Kt, z=z, q=q)
     
